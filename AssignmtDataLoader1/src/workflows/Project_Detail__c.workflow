@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workflow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <alerts>
+        <fullName>Project_End_Date_Reminder</fullName>
+        <description>Project End Date Reminder</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>HR_Manager</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>Manager</recipient>
+            <type>role</type>
+        </recipients>
+        <recipients>
+            <recipient>saumya@espl.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/Manager_Project_End_Nonification</template>
+    </alerts>
+    <alerts>
+        <fullName>Your_new_project</fullName>
+        <description>Your new project</description>
+        <protected>false</protected>
+        <recipients>
+            <recipient>saumya@espl.com</recipient>
+            <type>user</type>
+        </recipients>
+        <senderType>CurrentUser</senderType>
+        <template>unfiled$public/SalesNewCustomerEmail</template>
+    </alerts>
+    <fieldUpdates>
+        <fullName>updated</fullName>
+        <field>Status__c</field>
+        <literalValue>Closed</literalValue>
+        <name>updated</name>
+        <notifyAssignee>false</notifyAssignee>
+        <operation>Literal</operation>
+        <protected>false</protected>
+    </fieldUpdates>
+    <rules>
+        <fullName>Calender_Project</fullName>
+        <actions>
+            <name>Your_new_project</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <criteriaItems>
+            <field>Project_Detail__c.Project_Code__c</field>
+            <operation>notEqual</operation>
+            <value>null</value>
+        </criteriaItems>
+        <triggerType>onCreateOnly</triggerType>
+    </rules>
+    <rules>
+        <fullName>Project Status Closed</fullName>
+        <actions>
+            <name>updated</name>
+            <type>FieldUpdate</type>
+        </actions>
+        <active>true</active>
+        <formula>End_Date__c==TODAY()</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+    <rules>
+        <fullName>Project_End_Date_notification</fullName>
+        <actions>
+            <name>Project_End_Date_Reminder</name>
+            <type>Alert</type>
+        </actions>
+        <active>true</active>
+        <formula>AND((End_Date__c -5)==TODAY())</formula>
+        <triggerType>onAllChanges</triggerType>
+    </rules>
+</Workflow>
